@@ -1,15 +1,15 @@
 var ship;
 var enemies = [];
-var blocks = [];
+var bunkers = [];
 var shot = [];
 var ufo;
 var enemiesRows = 5;
 var enemiesCols = 10;
 var timePassed = 0;
-var enemyProgress = 0;
+var enemyProgress = 1;
 var enemyDirection = 1;
 var enemyMovement = 0;
-var gameWidth = windowWidth;
+var gameWidth = 1000;
 var gameHeight = 500;
 
 
@@ -25,7 +25,7 @@ function setup() {
 	}
 
 	for (var i = 0; i < 6; i++) {
-		blocks[i] = new Block(i * 80 + 80, 20);
+		bunkers[i] = new Block(i * 80 + 80, 20);
 	}
 }
 
@@ -35,23 +35,30 @@ function draw() {
 	shot.show();
 	shot.move();
 
+
 	// insert loop for shot moving with the ship here!
 
 	for (var j = 0; j < enemiesRows; j++) {
 		for (var i = 0; i < enemiesCols; i++) {
-			enemies[j][i].updatePos(60 * i + timePassed, j * 40 + enemyProgress);
-			if (checkBorder(j,i) === true) {
+
+			enemies[j][i].updatePos(60 * i + enemyMovement, j * 40 + enemyProgress);
+			if (checkBorder(j, i) === true) {
 				enemyProgress = enemyProgress + 10;
 				enemyDirection = enemyDirection * -1;
 			}
+			if (enemies[j][i].dead === false) {
 				enemies[j][i].show();
+			}
+
 		}
 	}
 
 	for (var i = 0; i < 6; i++) {
-		blocks[i].show();
+		bunkers[i].show();
 	}
-	timePassed = timePassed + enemyDirection;
+	enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 100) + enemyDirection;
+	timePassed++;
+
 	console.log(enemyDirection);
 	console.log(enemyMovement);
 
@@ -70,13 +77,13 @@ function keyPressed() {
 	}
 }
 
-function checkBorder(j,i) {
-			//output("Checking" + enemies[j][i] + " Row = " + j + " Col = " + i + "xPos")
-			if (enemies[j][i].x > gameWidth || enemies[j][i].x < 0) {
-				return true;
-			} else {
-				return false;
-			}
+function checkBorder(j, i) {
+	//output("Checking" + enemies[j][i] + " Row = " + j + " Col = " + i + "xPos")
+	if ((enemies[j][i].x > gameWidth || enemies[j][i].x < 0) && (enemies[j][i].dead === false)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function output(x) {
