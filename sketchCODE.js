@@ -25,7 +25,7 @@ function setup() {
 	}
 
 	for (var i = 0; i < 6; i++) {
-		bunkers[i] = new Block(i * 80 + 80, 20);
+		bunkers[i] = new Bunker(i * 80 + 80, 20);
 	}
 }
 
