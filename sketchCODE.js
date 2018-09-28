@@ -35,7 +35,12 @@ function draw() {
 	shot.show();
 	shot.move();
 
-
+	if (keyIsDown(LEFT_ARROW)) {
+		ship.x -= 3;
+	}
+	if (keyIsDown(RIGHT_ARROW)) {
+		ship.x += 3;
+	}
 	// insert loop for shot moving with the ship here!
 
 	for (var j = 0; j < enemiesRows; j++) {
@@ -49,7 +54,6 @@ function draw() {
 			if (enemies[j][i].dead === false) {
 				enemies[j][i].show();
 			}
-
 		}
 	}
 
@@ -62,19 +66,12 @@ function draw() {
 
 	console.log(enemyDirection);
 	console.log(enemyMovement);
-
-
 }
 
 function keyPressed() {
 	if (key === ' ') {
 		var shot = new Shot(width / 2, height / 2);
 		shot.push(shot);
-	}
-	if (keyCode === RIGHT_ARROW) {
-		ship.move(1);
-	} else if (keyCode === LEFT_ARROW) {
-		ship.move(-1);
 	}
 }
 
