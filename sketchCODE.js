@@ -25,7 +25,7 @@ function setup() {
 	}
 
 	for (var i = 0; i < 6; i++) {
-		bunkers[i] = new Bunker(i * 80 + 80, 20);
+		bunkers[i] = new Bunker(i * 100 + 250, 20);
 	}
 }
 
@@ -56,6 +56,7 @@ function draw() {
 	for (var i = 0; i < 6; i++) {
 		bunkers[i].show();
 	}
+
 	enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 100) + enemyDirection;
 	timePassed++;
 

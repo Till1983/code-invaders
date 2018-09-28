@@ -4,6 +4,7 @@ function Bunker(x, y) {
 
   this.show = function() {
     fill(240, 0, 240);
-    rect(this.x, height-80, 35, 35);
+    rectMode(CENTER);
+    rect(this.x, height-80, 38, 38);
   }
 }
