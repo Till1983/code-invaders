@@ -1,7 +1,7 @@
 var ship;
 var enemies = [];
 var bunkers = [];
-var shot = [];
+var shots = [];
 var ufo;
 var enemiesRows = 5;
 var enemiesCols = 10;
@@ -16,7 +16,7 @@ var gameHeight = 500;
 function setup() {
 	createCanvas(gameWidth, gameHeight);
 	ship = new Ship();
-	shot = new Shot(width / 2, height / 2);
+	shots = new Shot(ship.x, height);
 	for (var j = 0; j < enemiesRows; j++) {
 		enemies[j] = [];
 		for (var i = 0; i < enemiesCols; i++) {
@@ -32,16 +32,21 @@ function setup() {
 function draw() {
 	background(60, 0, 255);
 	ship.show();
-	shot.show();
-	shot.move();
+	shots.show();
+	shots.move();
 
 	if (keyIsDown(LEFT_ARROW)) {
-		ship.x -= 3;
+		ship.x -= 5;
 	}
 	if (keyIsDown(RIGHT_ARROW)) {
-		ship.x += 3;
+		ship.x += 5;
 	}
-	// insert loop for shot moving with the ship here!
+
+	for (var i = 0; i < shots.length; i++) {
+		shots[i].show();
+		shots[i].move();
+	}
+
 
 	for (var j = 0; j < enemiesRows; j++) {
 		for (var i = 0; i < enemiesCols; i++) {
@@ -70,8 +75,7 @@ function draw() {
 
 function keyPressed() {
 	if (key === ' ') {
-		var shot = new Shot(width / 2, height / 2);
-		shot.push(shot);
+		shots.push(new Shot(ship.x, height));
 	}
 }
 
