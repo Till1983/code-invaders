@@ -3,12 +3,15 @@ function Shot(x, y) {
   this.y = y;
 
   this.show = function() {
-    fill(255, 0, 120);
-    ellipse(this.x, this.y, 5, 5);
+    fill(255);
+    ellipse(this.x, this.y, 10, 10);
   }
 
   this.move = function() {
-    this.y = this.y-1;
+    this.y = this.y - 5;
   }
 
+  this.push = function() {
+    this.y = y;
+  }
 }
