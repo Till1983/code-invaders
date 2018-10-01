@@ -16,7 +16,12 @@ var gameHeight = 500;
 function setup() {
 	createCanvas(gameWidth, gameHeight);
 	ship = new Ship();
-	shots = new Shot(ship.x, height);
+
+
+	for (var i = 0; i < shots.length; i++) {
+		shots = new Shot(ship.x, height);
+	}
+
 	for (var j = 0; j < enemiesRows; j++) {
 		enemies[j] = [];
 		for (var i = 0; i < enemiesCols; i++) {
@@ -32,8 +37,11 @@ function setup() {
 function draw() {
 	background(60, 0, 255);
 	ship.show();
-	shots.show();
-	shots.move();
+
+	for (var i = 0; i < shots.length; i++) {
+		shots[i].show();
+		shots[i].move();
+	}
 
 	if (keyIsDown(LEFT_ARROW)) {
 		ship.x -= 5;
@@ -42,10 +50,7 @@ function draw() {
 		ship.x += 5;
 	}
 
-	for (var i = 0; i < shots.length; i++) {
-		shots[i].show();
-		shots[i].move();
-	}
+
 
 
 	for (var j = 0; j < enemiesRows; j++) {
@@ -75,7 +80,8 @@ function draw() {
 
 function keyPressed() {
 	if (key === ' ') {
-		shots.push(new Shot(ship.x, height));
+		var shot = new Shot(ship.x, height);
+		shots.push(shot);
 	}
 }
 
