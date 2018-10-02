@@ -17,7 +17,6 @@ function setup() {
 	createCanvas(gameWidth, gameHeight);
 	ship = new Ship();
 
-
 	for (var i = 0; i < shots.length; i++) {
 		shots = new Shot(ship.x, height);
 	}
@@ -33,6 +32,7 @@ function setup() {
 		bunkers[i] = new Bunker(i * 100 + 250, 20);
 	}
 }
+
 
 function draw() {
 	background(60, 0, 255);
@@ -50,9 +50,6 @@ function draw() {
 		ship.x += 5;
 	}
 
-
-
-
 	for (var j = 0; j < enemiesRows; j++) {
 		for (var i = 0; i < enemiesCols; i++) {
 
@@ -64,11 +61,13 @@ function draw() {
 			if (enemies[j][i].dead === false) {
 				enemies[j][i].show();
 			}
+			checkHit(j, i);
 		}
 	}
 
 	for (var i = 0; i < 6; i++) {
 		bunkers[i].show();
+		checkBunkers(i);
 	}
 
 	enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 100) + enemyDirection;
@@ -78,15 +77,15 @@ function draw() {
 	console.log(enemyMovement);
 }
 
+
 function keyPressed() {
 	if (key === ' ') {
-		var shot = new Shot(ship.x, height);
-		shots.push(shot);
+		shots.push(new Shot(ship.x, height));
 	}
 }
 
+
 function checkBorder(j, i) {
-	//output("Checking" + enemies[j][i] + " Row = " + j + " Col = " + i + "xPos")
 	if ((enemies[j][i].x > gameWidth || enemies[j][i].x < 0) && (enemies[j][i].dead === false)) {
 		return true;
 	} else {
@@ -94,6 +93,21 @@ function checkBorder(j, i) {
 	}
 }
 
-function output(x) {
-	console.log(x);
+function checkBunkers(b){
+for (var l = 0; l < shots.length; l++) {
+		if (dist(shots[l].x, shots[l].y, bunkers[b].x, bunkers[b].y) < (shots[l].diameter / 2 + bunkers[b].width / 2)) {
+			shots.splice(l, 1);
+			system.log("Hit bunker " + b);
+		}
+	}
+}
+
+
+function checkHit(j, i) {
+	for (var l = 0; l < shots.length; l++) {
+		 if (dist(shots[l].x, shots[l].y, enemies[j][i].x, enemies[j][i].y) < (shots[l].diameter / 2 + enemies[j][i].width / 2)) {
+			enemies[j][i].die();
+			shots.splice(l, 1);
+		}
+	}
 }
