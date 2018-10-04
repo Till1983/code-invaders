@@ -2,6 +2,7 @@ var ship;
 var enemies = [];
 var bunkers = [];
 var shots = [];
+var enemyShots = [];
 var ufo;
 var enemiesRows = 5;
 var enemiesCols = 10;
@@ -55,6 +56,11 @@ function draw() {
         shots[i].move();
     }
 
+    for (var i = 0; i < enemyShots.length; i++) {
+        enemyShots[i].show();
+        enemyShots[i].move();
+    }
+
     if (keyIsDown(LEFT_ARROW)) {
         ship.x -= 5;
     }
@@ -73,6 +79,10 @@ function draw() {
             }
             if (enemies[j][i].dead === false) {
                 enemies[j][i].show();
+                if (random(0,100) < 0.1)
+                {
+                  enemyShoot(j,i);
+                }
             }
             checkHit(j, i);
         }
@@ -99,6 +109,10 @@ function keyPressed() {
     }
 }
 
+function enemyShoot(j, i)
+{
+  enemyShots.push(new enemyShot(enemies[j][i].x, enemies[j][i].y));
+}
 
 function checkBorder(j, i) {
     if ((enemies[j][i].x > gameWidth || enemies[j][i].x < 0) && (enemies[j][i].dead === false)) {
@@ -109,6 +123,8 @@ function checkBorder(j, i) {
 }
 
 
+
+
 function checkBunkers(b) {
     for (var l = 0; l < shots.length; l++) {
         if (dist(shots[l].x, shots[l].y, bunkers[b].x, bunkers[b].y) < (shots[l].diameter / 2 + bunkers[b].width / 2)) {
@@ -117,6 +133,7 @@ function checkBunkers(b) {
         }
     }
 }
+
 
 
 function checkHit(j, i) {
