@@ -14,10 +14,13 @@ var gameWidth = 1000;
 var gameHeight = 650;
 var coolDown = -1;
 var enemySprites = [];
-
+var first;
 
 function setup() {
-    bg = loadImage("background/backround.png");
+    first = loadImage("screens/first.png");
+
+    //var button = createButton("Start Game");
+    //button.mousePressed(starSketch);
 
 
     for (var l = 1; l < 4; l++) {
@@ -48,59 +51,60 @@ function setup() {
 
 
 function draw() {
-    background(bg);
+    background(first);
     ship.show();
 
-    for (var i = 0; i < shots.length; i++) {
-        shots[i].show();
-        shots[i].move();
-    }
+  for (var i = 0; i < shots.length; i++) {
+      shots[i].show();
+      shots[i].move();
+  }
 
-    for (var i = 0; i < enemyShots.length; i++) {
-        enemyShots[i].show();
-        enemyShots[i].move();
-    }
+  for (var i = 0; i < enemyShots.length; i++) {
+      enemyShots[i].show();
+      enemyShots[i].move();
+  }
 
-    if (keyIsDown(LEFT_ARROW)) {
-        ship.x -= 5;
-    }
-    if (keyIsDown(RIGHT_ARROW)) {
-        ship.x += 5;
-    }
+  if (keyIsDown(LEFT_ARROW)) {
+      ship.x -= 5;
+  }
+  if (keyIsDown(RIGHT_ARROW)) {
+      ship.x += 5;
+  }
 
-    for (var j = 0; j < enemiesRows; j++) {
-        for (var i = 0; i < enemiesCols; i++) {
+  for (var j = 0; j < enemiesRows; j++) {
+      for (var i = 0; i < enemiesCols; i++) {
 
-            enemies[j][i].updatePos(60 * i + enemyMovement, j * 40 + enemyProgress);
-            if (checkBorder(j, i) === true && coolDown <= 0) {
-                enemyProgress = enemyProgress + 10;
-                enemyDirection = enemyDirection * -1;
-                coolDown = 10;
-            }
-            if (enemies[j][i].dead === false) {
-                enemies[j][i].show();
-                if (random(0,100) < 0.1)
-                {
-                  enemyShoot(j,i);
-                }
-            }
-            checkHit(j, i);
-        }
-    }
+          enemies[j][i].updatePos(60 * i + enemyMovement, j * 40 + enemyProgress);
+          if (checkBorder(j, i) === true && coolDown <= 0) {
+              enemyProgress = enemyProgress + 10;
+              enemyDirection = enemyDirection * -1;
+              coolDown = 10;
+          }
+          if (enemies[j][i].dead === false) {
+              enemies[j][i].show();
+              if (random(0,100) < 0.1)
+              {
+                enemyShoot(j,i);
+              }
+          }
+          checkHit(j, i);
+      }
+  }
 
-    for (var i = 0; i < 6; i++) {
-        bunkers[i].show();
-        checkBunkers(i);
-    }
+  for (var i = 0; i < 6; i++) {
+      bunkers[i].show();
+      checkBunkers(i);
+  }
 
-    enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 50) + enemyDirection;
-    timePassed++;
+  enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 50) + enemyDirection;
+  timePassed++;
 
-    coolDown--;
+  coolDown--;
 
-    console.log(enemyProgress);
-    console.log(coolDown);
+  console.log(enemyProgress);
+  console.log(coolDown);
 }
+
 
 
 function keyPressed() {
