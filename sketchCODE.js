@@ -17,12 +17,15 @@ var enemySprites = [];
 var screenStart;
 var screenMain;
 var screenInstructions;
+var screenGameOver;
 var gameMode = 0;
 
 function setup() {
     screenStart = loadImage("screens/first.png");
     screenMain = loadImage("background/backround.png");
     screenInstructions = loadImage("screens/second.png");
+    screenGameOver = loadImage("screens/third.png");
+
 
     //var button = createButton("Start Game");
     //button.mousePressed(starSketch);
@@ -61,6 +64,9 @@ function draw() {
         background(screenStart);
     } else if (gameMode === 2) {
         background(screenInstructions);
+    } else if (gameMode === 3) {
+        background(screenGameOver);
+
     } else {
 
         background(screenMain);
@@ -78,6 +84,9 @@ function draw() {
         for (var i = 0; i < enemyShots.length; i++) {
             enemyShots[i].show();
             enemyShots[i].move();
+            if (playerHit(enemyShots[i].x, enemyShots[i].y, enemyShots[i].diameter) === true) {
+                gameMode = 3;
+            }
             if (enemyShots[i].dead === true || checkBunkers(enemyShots[i].x, enemyShots[i].y, enemyShots[i].diameter) === true) {
                 enemyShots.splice(i, 1);
             }
@@ -133,8 +142,13 @@ function draw() {
 
 function keyPressed() {
     if (key === ' ') {
-        gameMode = 1;
-        shots.push(new Shot(ship.x, height));
+
+        if (gameMode === 0) {
+            gameMode = 1;
+        } else if (gameMode === 1) {
+            shots.push(new Shot(ship.x, height));
+        }
+
     }
     if (keyCode === 73) {
         gameMode = 2;
@@ -168,7 +182,13 @@ function checkBunkers(x, y, d) {
 }
 
 
-
+function playerHit(x, y, d) {
+    if (dist(x, y, ship.x, ship.y) < (d / 2 + ship.diameter / 2)) {
+        console.log("YOU GOT HIT");
+        return (true);
+    }
+    return (false);
+}
 
 function checkHit(j, i) {
     for (var l = 0; l < shots.length; l++) {
