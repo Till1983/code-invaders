@@ -14,10 +14,15 @@ var gameWidth = 1000;
 var gameHeight = 650;
 var coolDown = -1;
 var enemySprites = [];
-var first;
+var screenStart;
+var screenMain;
+var screenInstructions;
+var gameMode = 0;
 
 function setup() {
-    first = loadImage("screens/first.png");
+    screenStart = loadImage("screens/first.png");
+    screenMain = loadImage("background/backround.png");
+    screenInstructions = loadImage("screens/second.png");
 
     //var button = createButton("Start Game");
     //button.mousePressed(starSketch);
@@ -51,7 +56,18 @@ function setup() {
 
 
 function draw() {
-    background(first);
+
+  if (gameMode === 0)
+  {
+    background(screenStart);
+  }
+  else if (gameMode === 2)
+  {
+    background(screenInstructions);
+  }
+  else {
+
+background(screenMain);
     ship.show();
 
   for (var i = 0; i < shots.length; i++) {
@@ -104,12 +120,18 @@ function draw() {
   console.log(enemyProgress);
   console.log(coolDown);
 }
+}
 
 
 
 function keyPressed() {
     if (key === ' ') {
+      gameMode = 1;
         shots.push(new Shot(ship.x, height));
+    }
+    if (keyCode === 73)
+    {
+      gameMode = 2;
     }
 }
 
