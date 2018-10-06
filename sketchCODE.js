@@ -50,94 +50,99 @@ function setup() {
     }
 
     for (var i = 0; i < 6; i++) {
-        bunkers[i] = new Bunker(i * 100 + 250, 20);
+        bunkers[i] = new Bunker(i * 100 + 250, gameHeight - 120);
     }
 }
 
 
 function draw() {
 
-  if (gameMode === 0)
-  {
-    background(screenStart);
-  }
-  else if (gameMode === 2)
-  {
-    background(screenInstructions);
-  }
-  else {
+    if (gameMode === 0) {
+        background(screenStart);
+    } else if (gameMode === 2) {
+        background(screenInstructions);
+    } else {
 
-background(screenMain);
-    ship.show();
+        background(screenMain);
+        ship.show();
 
-  for (var i = 0; i < shots.length; i++) {
-      shots[i].show();
-      shots[i].move();
-  }
+        for (var i = 0; i < shots.length; i++) {
+            shots[i].show();
+            shots[i].move();
+            if (shots[i].dead === true || checkBunkers(shots[i].x, shots[i].y, shots[i].diameter) === true) {
+                shots.splice(i, 1);
+            }
 
-  for (var i = 0; i < enemyShots.length; i++) {
-      enemyShots[i].show();
-      enemyShots[i].move();
-  }
+        }
 
-  if (keyIsDown(LEFT_ARROW)) {
-      ship.x -= 5;
-  }
-  if (keyIsDown(RIGHT_ARROW)) {
-      ship.x += 5;
-  }
+        for (var i = 0; i < enemyShots.length; i++) {
+            enemyShots[i].show();
+            enemyShots[i].move();
+            if (enemyShots[i].dead === true || checkBunkers(enemyShots[i].x, enemyShots[i].y, enemyShots[i].diameter) === true) {
+                enemyShots.splice(i, 1);
+            }
 
-  for (var j = 0; j < enemiesRows; j++) {
-      for (var i = 0; i < enemiesCols; i++) {
+        }
 
-          enemies[j][i].updatePos(60 * i + enemyMovement, j * 40 + enemyProgress);
-          if (checkBorder(j, i) === true && coolDown <= 0) {
-              enemyProgress = enemyProgress + 10;
-              enemyDirection = enemyDirection * -1;
-              coolDown = 10;
-          }
-          if (enemies[j][i].dead === false) {
-              enemies[j][i].show();
-              if (random(0,100) < 0.1)
-              {
-                enemyShoot(j,i);
-              }
-          }
-          checkHit(j, i);
-      }
-  }
+        if (keyIsDown(LEFT_ARROW)) {
+            ship.x -= 5;
+        }
+        if (keyIsDown(RIGHT_ARROW)) {
+            ship.x += 5;
+        }
 
-  for (var i = 0; i < 6; i++) {
-      bunkers[i].show();
-      checkBunkers(i);
-  }
+        for (var j = 0; j < enemiesRows; j++) {
+            for (var i = 0; i < enemiesCols; i++) {
 
-  enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 50) + enemyDirection;
-  timePassed++;
+                enemies[j][i].updatePos(60 * i + enemyMovement, j * 40 + enemyProgress);
+                if (checkBorder(j, i) === true && coolDown <= 0) {
+                    enemyProgress = enemyProgress + 10;
+                    enemyDirection = enemyDirection * -1;
+                    coolDown = 10;
+                }
+                if (enemies[j][i].dead === false) {
+                    enemies[j][i].show();
+                    if (random(0, 100) < 0.1) {
+                        enemyShoot(j, i);
+                    }
+                }
+                checkHit(j, i);
+            }
+        }
 
-  coolDown--;
+        for (var i = 0; i < 6; i++) {
 
-  console.log(enemyProgress);
-  console.log(coolDown);
-}
+            if (bunkers[i].dead === false) {
+                bunkers[i].show();
+            }
+
+
+        }
+
+        enemyMovement = enemyMovement + (enemyDirection * enemyProgress / 50) + enemyDirection;
+        timePassed++;
+
+        coolDown--;
+
+        //console.log(enemyProgress);
+        //console.log(coolDown);
+    }
 }
 
 
 
 function keyPressed() {
     if (key === ' ') {
-      gameMode = 1;
+        gameMode = 1;
         shots.push(new Shot(ship.x, height));
     }
-    if (keyCode === 73)
-    {
-      gameMode = 2;
+    if (keyCode === 73) {
+        gameMode = 2;
     }
 }
 
-function enemyShoot(j, i)
-{
-  enemyShots.push(new enemyShot(enemies[j][i].x, enemies[j][i].y));
+function enemyShoot(j, i) {
+    enemyShots.push(new enemyShot(enemies[j][i].x, enemies[j][i].y));
 }
 
 function checkBorder(j, i) {
@@ -151,14 +156,17 @@ function checkBorder(j, i) {
 
 
 
-function checkBunkers(b) {
-    for (var l = 0; l < shots.length; l++) {
-        if (dist(shots[l].x, shots[l].y, bunkers[b].x, bunkers[b].y) < (shots[l].diameter / 2 + bunkers[b].width / 2)) {
-            shots.splice(l, 1);
-            system.log("Hit bunker " + b);
+function checkBunkers(x, y, d) {
+
+    for (var l = 0; l < bunkers.length; l++) {
+        if (dist(x, y, bunkers[l].x, bunkers[l].y) < (d / 2 + bunkers[l].diameter / 2) && bunkers[l].dead === false) {
+            bunkers[l].shrink();
+            return (true);
         }
     }
+    return (false);
 }
+
 
 
 
@@ -169,7 +177,7 @@ function checkHit(j, i) {
                 enemies[j][i].die();
                 shots.splice(l, 1);
             }
-            console.log("An enemy would have been hit but its already dead")
+            //console.log("An enemy would have been hit but its already dead")
         }
     }
 }

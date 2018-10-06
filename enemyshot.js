@@ -11,7 +11,11 @@ function enemyShot(x, y) {
     }
 
     this.move = function() {
-        this.y = this.y + 15;
+        this.y = this.y + 10
+        if (this.y > gameHeight)
+        {
+          this.die();
+        }
     }
 
     this.die = function() {
