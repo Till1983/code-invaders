@@ -18,25 +18,23 @@ var screenStart;
 var screenMain;
 var screenInstructions;
 var screenGameOver;
+var song;
 var gameMode = 0;
+var shotCoolDown = 0;
 
-function setup() {
-    screenStart = loadImage("screens/first.png");
+function preload() {
+    song = loadSound("soundtrack.mp3");
+    screenStart = loadImage("screens/first.png"); // to be updated
     screenMain = loadImage("background/backround.png");
     screenInstructions = loadImage("screens/second.png");
     screenGameOver = loadImage("screens/third.png");
+}
 
-
-    //var button = createButton("Start Game");
-    //button.mousePressed(starSketch);
-
+function setup() {
 
     for (var l = 1; l < 4; l++) {
         enemySprites[l] = loadImage("enemies/invader" + l + ".png");
     }
-
-
-    //bunkerSprite = loadImage("bunkers are still missing!");
 
     createCanvas(gameWidth, gameHeight);
     ship = new Ship();
@@ -55,6 +53,7 @@ function setup() {
     for (var i = 0; i < 6; i++) {
         bunkers[i] = new Bunker(i * 100 + 250, gameHeight - 120);
     }
+
 }
 
 
@@ -66,10 +65,11 @@ function draw() {
         background(screenInstructions);
     } else if (gameMode === 3) {
         background(screenGameOver);
-
+        song.stop();
     } else {
 
         background(screenMain);
+        ship.outofbounds();
         ship.show();
 
         for (var i = 0; i < shots.length; i++) {
@@ -116,6 +116,9 @@ function draw() {
                     }
                 }
                 checkHit(j, i);
+                if (playerHit(enemies[j][i].x, enemies[j][i].y, enemies[j][i].width) === true) {
+                    gameMode = 3;
+                }
             }
         }
 
@@ -132,12 +135,11 @@ function draw() {
         timePassed++;
 
         coolDown--;
-
+        shotCoolDown++;
         //console.log(enemyProgress);
         //console.log(coolDown);
     }
 }
-
 
 
 function keyPressed() {
@@ -145,8 +147,13 @@ function keyPressed() {
 
         if (gameMode === 0) {
             gameMode = 1;
+            song.play();
         } else if (gameMode === 1) {
-            shots.push(new Shot(ship.x, height));
+
+            if (shotCoolDown > 30) {
+                shots.push(new Shot(ship.x, height));
+                shotCoolDown = 0;
+            }
         }
 
     }
@@ -166,8 +173,6 @@ function checkBorder(j, i) {
         return false;
     }
 }
-
-
 
 
 function checkBunkers(x, y, d) {

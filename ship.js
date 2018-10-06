@@ -12,10 +12,27 @@ function Ship() {
     }
 
     this.move = function(dir) {
-        this.x += dir * 3;
+
+
+      this.x += dir * 3;
+
+
     }
 
     this.die = function() {
         this.dead = true;
+    }
+
+    this.outofbounds = function()
+    {
+      if (this.x > gameWidth)
+       {
+         this.x = gameWidth;
+       }
+       else if (this.x < 0)
+       {
+         this.x = 0;
+       }
+
     }
 }
