@@ -24,7 +24,7 @@ var shotCoolDown = 0;
 
 function preload() {
     song = loadSound("soundtrack.mp3");
-    screenStart = loadImage("screens/first.png"); // to be updated
+    screenStart = loadImage("screens/main.png"); 
     screenMain = loadImage("background/backround.png");
     screenInstructions = loadImage("screens/second.png");
     screenGameOver = loadImage("screens/third.png");
